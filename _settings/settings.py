@@ -10,11 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from neomodel import config as neo_config
 from pathlib import Path
 import decouple
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Configure Neo4j graph database
+neo_config.DATABASE_URL = decouple.config("NOE_DATABASE_URL")
 
 
 # Quick-start development settings - unsuitable for production

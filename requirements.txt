@@ -1,4 +1,5 @@
 django==5.1.2
+neomodel==5.3.3
 python-decouple==3.8
 
 
