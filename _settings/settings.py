@@ -28,6 +28,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'region': decouple.config('AWS_REGION'),
     'visibility_timeout': 3600,  # Time in seconds for message visibility timeout
     'polling_interval': 1,  # Time between polling for new messages (in seconds)
+    'queues': [decouple.config('AWS_SQS_NAME')],
 }
 
 CELERY_ACCEPT_CONTENT = ['json']
