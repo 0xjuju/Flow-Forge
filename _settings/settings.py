@@ -18,7 +18,7 @@ import decouple
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Configure Neo4j graph database
-neo_config.DATABASE_URL = decouple.config("NOE_DATABASE_URL")
+neo_config.DATABASE_URL = decouple.config("NEO_DATABASE_URL")
 
 
 # Quick-start development settings - unsuitable for production
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'aws_services'
 ]
 
 MIDDLEWARE = [
