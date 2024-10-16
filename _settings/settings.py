@@ -21,6 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 neo_config.DATABASE_URL = decouple.config("NEO_DATABASE_URL")
 
 
+# Celery configuration
+CELERY_BROKER_URL = f"sqs://{decouple.config('AWS_ACCESS_KEY')}:{decouple.config('AWS_SECRET')}@"
+
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'region': decouple.config('AWS_REGION'),
+    'visibility_timeout': 3600,  # Time in seconds for message visibility timeout
+    'polling_interval': 1,  # Time between polling for new messages (in seconds)
+}
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -30,7 +42,7 @@ SECRET_KEY = decouple.config("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 
 # Application definition

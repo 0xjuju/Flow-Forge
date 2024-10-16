@@ -1,7 +1,9 @@
 boto3==1.35.40
+celery==5.4.0
 django==5.1.2
+gunicorn==23.0.0
 neomodel==5.3.3
+pycurl==7.45.3
 python-decouple==3.8
-
 
 
