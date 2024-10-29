@@ -4,9 +4,11 @@ django==5.1.2
 gunicorn==23.0.0
 moto==5.0.17
 neomodel==5.3.3
+py-solc-x==2.0.3
 pycurl==7.45.3
 pytest==8.3.3
 pytest-django==4.9.0
 python-decouple==3.8
+web3==7.4.0
 
 

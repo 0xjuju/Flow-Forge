@@ -43,7 +43,7 @@ SECRET_KEY = decouple.config("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "ce9b-75-144-190-245.ngrok-free.app"]
 
 
 # Application definition
