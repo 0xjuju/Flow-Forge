@@ -17,6 +17,8 @@ class Blockchain:
         self.chain = chain.lower()
         self.network_type = network_type.lower()
         self.API_KEY = config("ALCHEMY_API_KEY")
+        self.PRIVATE_KEY = config("PRIVATE_KEY")
+        self.ACCOUNT = Account.from_key(self.PRIVATE_KEY).address
 
         if self.chain != "ethereum":
             raise ValueError("Currently, only the Ethereum chain is supported.")
@@ -103,16 +105,13 @@ class Blockchain:
         :param bytecode: The compiled bytecode of the ERC-20 contract.
         :return: The address of the deployed contract.
         """
-        # Get the account to deploy from
-        private_key = config("PRIVATE_KEY")
-        account = Account.from_key(private_key).address
 
         # Get transaction count for wallet
-        nonce = self.web3.eth.get_transaction_count(account)
+        nonce = self.web3.eth.get_transaction_count(self.ACCOUNT)
 
         # Create the contract deployment transaction
         transaction = {
-            "from": account,
+            "from": self.ACCOUNT,
             "gas": 2000000,
             "gasPrice": self.web3.to_wei("20", "gwei"),
             "nonce": nonce,
@@ -120,7 +119,7 @@ class Blockchain:
         }
 
         # Sign and send the transaction
-        signed_tx = self.web3.eth.account.sign_transaction(transaction, private_key=private_key)
+        signed_tx = self.web3.eth.account.sign_transaction(transaction, private_key=self.PRIVATE_KEY)
         tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
         # Wait for the transaction receipt
