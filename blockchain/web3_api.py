@@ -50,27 +50,50 @@ class Blockchain:
             raise ConnectionError(f"Unable to connect to the {self.network_type} network.")
         return web3
 
-    @staticmethod
-    def build_transaction(from_address: str, **kwargs) -> dict[str, any]:
+    def build_transaction(self, from_address: str, gas: int = None, gas_price: int = None, nonce: int = None,
+                          **kwargs) -> dict[str, any]:
         """
-        Build blockchain transaction
+
         :param from_address: Address creating the transaction
-        :param kwargs: keyword / value pairs to be added in the transaction
-            if no gas or gasPrice is present, it is automatically estimated by the protocol
-            if nonce is not present, it is automatically set to the next transaction count for the address
-        :return:
+        :param gas: Amount of gas required for transaction
+        :param gas_price: How much ether to use for gas
+        :param nonce: transaction index for account. defaults to latest
+        :param kwargs: Optional arguments for transaction
+        :return: Unsigned blockchain transaction
         """
 
         acceptable_attributes = {"from", "to", "gas", "gasPrice", "nonce", "data", "value", "maxFeePerGas",
                                  "maxPriorityFeePerGas"}
 
+        if nonce is None:
+            nonce = self.get_nonce()
+
+        transaction = {
+            "from": from_address,
+            "nonce": nonce,
+        }
+
+        if gas is None:
+            gas = self.web3.eth.estimate_gas(transaction)
+
+        if gas_price is None:
+            gas_price = self.web3.eth.gas_price
+
         if not all(i in acceptable_attributes for i in kwargs):
             raise ValueError(f"1 of more keyword arguments are invalid. Options are: {kwargs}")
 
-        transaction = {"from": from_address}
+        transaction["gas"] = gas
+        transaction["gasPrice"] = gas_price
         transaction.update(kwargs)
 
         return transaction
+
+    def get_nonce(self) -> int:
+        """
+
+        :return: Transaction count of address
+        """
+        return self.web3.eth.get_transaction_count(self.ACCOUNT)
 
     def sign_transaction(self, transaction: dict[str, any]) -> SignedTransaction:
         """

@@ -21,6 +21,14 @@ class BlockchainTests(TestCase):
         connected = self.blockchain.test_connection()
         self.assertTrue(connected, "The blockchain should be connected.")
 
+    def test_sign_transaction(self):
+        signed_tx = self.blockchain.sign_transaction(self.blockchain.build_transaction(self.blockchain.ACCOUNT))
+        self.assertTrue(hasattr(signed_tx, "raw_transaction"))
+        self.assertTrue(hasattr(signed_tx, "hash"))
+        self.assertTrue(hasattr(signed_tx, "r"))
+        self.assertTrue(hasattr(signed_tx, "s"))
+        self.assertTrue(hasattr(signed_tx, "v"))
+
     @patch("blockchain.web3_api.compile_source")
     @patch("blockchain.web3_api.install_solc")
     def test_compile_contract(self, mock_install_solc, mock_compile_source):
@@ -95,3 +103,4 @@ class BlockchainTests(TestCase):
         self.blockchain.request_testnet_tokens(address=address)
         mock_requests_post.assert_called_once()
         self.assertEqual(mock_requests_post.call_args[1]["json"], {"address": address}, "The request payload should contain the correct address.")
+
