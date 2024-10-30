@@ -49,6 +49,28 @@ class Blockchain:
             raise ConnectionError(f"Unable to connect to the {self.network_type} network.")
         return web3
 
+    @staticmethod
+    def build_transaction(from_address: str, **kwargs) -> dict[str, any]:
+        """
+        Build blockchain transaction
+        :param from_address: Address creating the transaction
+        :param kwargs: keyword / value pairs to be added in the transaction
+            if no gas or gasPrice is present, it is automatically estimated by the protocol
+            if nonce is not present, it is automatically set to the next transaction count for the address
+        :return:
+        """
+
+        acceptable_attributes = {"from", "to", "gas", "gasPrice", "nonce", "data", "value", "maxFeePerGas",
+                                 "maxPriorityFeePerGas"}
+
+        if not all(i in acceptable_attributes for i in kwargs):
+            raise ValueError(f"1 of more keyword arguments are invalid. Options are: {kwargs}")
+
+        transaction = {"from": from_address}
+        transaction.update(kwargs)
+
+        return transaction
+
     def test_connection(self) -> bool:
         """
         Test if the connection to the blockchain network is successful.
@@ -110,13 +132,7 @@ class Blockchain:
         nonce = self.web3.eth.get_transaction_count(self.ACCOUNT)
 
         # Create the contract deployment transaction
-        transaction = {
-            "from": self.ACCOUNT,
-            "gas": 2000000,
-            "gasPrice": self.web3.to_wei("20", "gwei"),
-            "nonce": nonce,
-            "data": bytecode,
-        }
+        transaction = self.build_transaction(self.ACCOUNT, nonce=nonce, data=bytecode)
 
         # Sign and send the transaction
         signed_tx = self.web3.eth.account.sign_transaction(transaction, private_key=self.PRIVATE_KEY)
