@@ -2,6 +2,7 @@ import os
 from web3 import Web3
 from decouple import config
 from eth_account import Account
+from eth_account.datastructures import SignedTransaction
 from solcx import compile_source, install_solc
 import requests
 
@@ -71,6 +72,14 @@ class Blockchain:
 
         return transaction
 
+    def sign_transaction(self, transaction: dict[str, any]) -> SignedTransaction:
+        """
+        Sign a transaction using private keys
+        :param transaction: transaction parameters
+        :return: SignedTransaction containing rawSignature and other metadata after tx is successfully signed
+        """
+        return self.web3.eth.account.sign_transaction(transaction, private_key=self.PRIVATE_KEY)
+
     def test_connection(self) -> bool:
         """
         Test if the connection to the blockchain network is successful.
@@ -135,7 +144,7 @@ class Blockchain:
         transaction = self.build_transaction(self.ACCOUNT, nonce=nonce, data=bytecode)
 
         # Sign and send the transaction
-        signed_tx = self.web3.eth.account.sign_transaction(transaction, private_key=self.PRIVATE_KEY)
+        signed_tx = self.sign_transaction(transaction)
         tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
         # Wait for the transaction receipt
