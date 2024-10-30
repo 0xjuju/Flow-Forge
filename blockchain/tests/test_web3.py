@@ -22,6 +22,9 @@ class BlockchainTests(TestCase):
         self.assertTrue(connected, "The blockchain should be connected.")
 
     def test_sign_transaction(self):
+        """
+        Test that signed transaction returns the expected attributes
+        """
         signed_tx = self.blockchain.sign_transaction(self.blockchain.build_transaction(self.blockchain.ACCOUNT))
         self.assertTrue(hasattr(signed_tx, "raw_transaction"))
         self.assertTrue(hasattr(signed_tx, "hash"))
