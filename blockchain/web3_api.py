@@ -25,6 +25,7 @@ class Blockchain:
             "mainnet": f"https://eth-mainnet.alchemyapi.io/v2/{self.API_KEY}",
             "sepolia": f"https://eth-sepolia.g.alchemy.com/v2/{self.API_KEY}"
         }
+
         supported_networks = ["mainnet", "sepolia"]
         if self.network_type not in supported_networks:
             raise ValueError(f"Unsupported network type. Supported networks are: {', '.join(supported_networks)}.")
@@ -137,8 +138,13 @@ class Blockchain:
         :param address: The Ethereum address to receive testnet tokens.
         """
 
-        faucet_url = f"{self.NETWORK_URLS[self.network_type]}/faucet"
-        response = requests.post(faucet_url, json={"address": address})
+        faucet_url = f"https://faucets.chain.link/{self.network_type}"
+        data = {
+            "address": address,
+            "network": self.network_type
+        }
+
+        response = requests.post(faucet_url, json=data)
 
         if response.status_code == 200:
             print(f"Successfully requested {self.network_type} testnet tokens for address: {address}")
