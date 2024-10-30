@@ -89,7 +89,6 @@ class Blockchain:
         compiled_sol = compile_source(erc20_source_code, output_values=["abi", "bin"])
 
         contract_interface = compiled_sol["<stdin>:MyToken"]
-
         # Set the ABI
         self.TOKEN_ABI = contract_interface["abi"]
         bytecode = contract_interface["bin"]
@@ -106,6 +105,8 @@ class Blockchain:
         # Get the account to deploy from
         private_key = config("PRIVATE_KEY")
         account = Account.from_key(private_key).address
+
+        # Get transaction count for wallet
         nonce = self.web3.eth.get_transaction_count(account)
 
         # Create the contract deployment transaction
@@ -123,6 +124,7 @@ class Blockchain:
 
         # Wait for the transaction receipt
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
+
         contract_address = tx_receipt["contractAddress"]
 
         print(f"Contract deployed at address: {contract_address}")
