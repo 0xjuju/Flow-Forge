@@ -90,10 +90,17 @@ class Blockchain:
 
     def get_nonce(self) -> int:
         """
-
         :return: Transaction count of address
         """
         return self.web3.eth.get_transaction_count(self.ACCOUNT)
+
+    def broadcast_transaction(self, raw_transaction) -> bytes:
+        """
+        Broadcast the signed transaction to the blockchain
+        :param raw_transaction: raw signed transaction
+        :return: Hash of transaction after it's included in the block
+        """
+        return self.web3.eth.send_raw_transaction(raw_transaction)
 
     def sign_transaction(self, transaction: dict[str, any]) -> SignedTransaction:
         """
@@ -168,7 +175,7 @@ class Blockchain:
 
         # Sign and send the transaction
         signed_tx = self.sign_transaction(transaction)
-        tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = self.broadcast_transaction(signed_tx.rawTransaction)
 
         # Wait for the transaction receipt
         tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)

@@ -21,7 +21,7 @@ class BlockchainTests(TestCase):
         connected = self.blockchain.test_connection()
         self.assertTrue(connected, "The blockchain should be connected.")
 
-    def test_sign_transaction(self):
+    def test_sign_and_broadcast_transaction(self):
         """
         Test that signed transaction returns the expected attributes
         """
@@ -31,6 +31,9 @@ class BlockchainTests(TestCase):
         self.assertTrue(hasattr(signed_tx, "r"))
         self.assertTrue(hasattr(signed_tx, "s"))
         self.assertTrue(hasattr(signed_tx, "v"))
+
+        raw_transaction = self.blockchain.broadcast_transaction(signed_tx["raw_transaction"])
+        self.assertTrue(isinstance(raw_transaction, bytes))
 
     @patch("blockchain.web3_api.compile_source")
     @patch("blockchain.web3_api.install_solc")
@@ -45,6 +48,7 @@ class BlockchainTests(TestCase):
                 "bin": "0x12345"
             }
         }
+
         bytecode, abi = self.blockchain.compile_contract(
             name="TestToken", symbol="TT", decimals=18, initial_supply=1000
         )
