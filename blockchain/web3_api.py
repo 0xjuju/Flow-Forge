@@ -94,7 +94,7 @@ class Blockchain:
         """
         return self.web3.eth.get_transaction_count(self.ACCOUNT)
 
-    def broadcast_transaction(self, raw_transaction) -> bytes:
+    def broadcast_transaction(self, raw_transaction: bytes) -> bytes:
         """
         Broadcast the signed transaction to the blockchain
         :param raw_transaction: raw signed transaction
