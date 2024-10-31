@@ -167,7 +167,7 @@ class Blockchain:
 
         return bytecode, self.TOKEN_ABI
 
-    def create_contract(self, bytecode: str):
+    def create_contract(self, bytecode: str) -> str:
         """
         Deploy a new ERC-20 smart contract to the blockchain.
 
