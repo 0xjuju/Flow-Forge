@@ -1,4 +1,3 @@
-import os
 from web3 import Web3
 from decouple import config
 from eth_account import Account
