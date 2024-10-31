@@ -176,12 +176,12 @@ class Blockchain:
         :return: The compiled bytecode and ABI of the contract.
         """
         # Install Solidity compiler version
-        install_solc("0.8.0")
+        install_solc("0.8.20")
 
         # Solidity source code for ERC-20 token
         erc20_source_code = f"""
         // SPDX-License-Identifier: MIT
-        pragma solidity ^0.8.0;
+        pragma solidity ^0.8.20;
 
         import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -191,7 +191,11 @@ class Blockchain:
         """
 
         # Compile the contract
-        compiled_sol = compile_source(erc20_source_code, output_values=["abi", "bin"])
+        compiled_sol = compile_source(
+            erc20_source_code,
+            output_values=["abi", "bin"],
+            allow_paths=["./node_modules"]
+        )
 
         contract_interface = compiled_sol["<stdin>:MyToken"]
         # Set the ABI
