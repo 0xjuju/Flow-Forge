@@ -1,6 +1,7 @@
 from django.test import TestCase
 from unittest.mock import Mock, patch
 from blockchain.web3_api import Blockchain
+from web3 import exceptions
 
 
 class BlockchainTests(TestCase):
@@ -32,8 +33,23 @@ class BlockchainTests(TestCase):
         self.assertTrue(hasattr(signed_tx, "s"))
         self.assertTrue(hasattr(signed_tx, "v"))
 
-        raw_transaction = self.blockchain.broadcast_transaction(signed_tx["raw_transaction"])
-        self.assertTrue(isinstance(raw_transaction, bytes))
+        transaction_hash = self.blockchain.broadcast_transaction(signed_tx["raw_transaction"])
+        self.assertTrue(isinstance(transaction_hash, bytes))
+
+        print("Waiting up to 15 seconds for transaction to be confirmed on blockchain... ")
+
+        try:  # except that timeout occasionally happens when dealing with testnet. skip this part if so
+            tx_receipt = self.blockchain.wait_for_transaction_receipt(transaction_hash, timeout=15)
+            self.assertTrue(hasattr(tx_receipt, "blockHash"))
+            self.assertTrue(hasattr(tx_receipt, "blockNumber"))
+            self.assertTrue(hasattr(tx_receipt, "contractAddress"))
+            self.assertTrue(hasattr(tx_receipt, "from"))
+            self.assertTrue(hasattr(tx_receipt, "gasUsed"))
+            self.assertTrue(hasattr(tx_receipt, "logs"))
+        except exceptions.TimeExhausted as e:
+            print(e)
+            print("Timeout is occasionally expected to happen for testnet while waiting for transaction receipt. Feel "
+                  "free to rerun this test later")
 
     @patch("blockchain.web3_api.compile_source")
     @patch("blockchain.web3_api.install_solc")

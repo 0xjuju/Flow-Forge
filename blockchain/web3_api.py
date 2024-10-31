@@ -124,6 +124,15 @@ class Blockchain:
             print(f"Failed to connect to the {self.network_type} network on the {self.chain} chain.")
         return is_connected
 
+    def wait_for_transaction_receipt(self, transaction_hash: bytes, timeout=120):
+        """
+
+        :param transaction_hash: Transaction hash of signed transaction
+        :param timeout: Number of seconds to wait for transaction to be included in the block
+        :return: Transaction receipt containing blockHash, blockNumber, Logs etc.
+        """
+        return self.web3.eth.wait_for_transaction_receipt(transaction_hash, timeout=timeout)
+
     def compile_contract(self, name: str, symbol: str, decimals: int, initial_supply: int):
         """
         Compile the ERC-20 smart contract with the specified parameters.
@@ -178,7 +187,7 @@ class Blockchain:
         tx_hash = self.broadcast_transaction(signed_tx.rawTransaction)
 
         # Wait for the transaction receipt
-        tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
+        tx_receipt = self.wait_for_transaction_receipt(tx_hash)
 
         contract_address = tx_receipt["contractAddress"]
 
