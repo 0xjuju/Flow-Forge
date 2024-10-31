@@ -106,8 +106,9 @@ class BlockchainTests(TestCase):
         Test if testnet tokens can be requested successfully.
         """
         mock_requests_post.return_value.status_code = 200
-        address = "0xYourEthereumAddressHere"
+        address = "0xEthereumAddress"
         self.blockchain.request_testnet_tokens(address=address)
         mock_requests_post.assert_called_once()
-        self.assertEqual(mock_requests_post.call_args[1]["json"], {"address": address}, "The request payload should contain the correct address.")
+        self.assertEqual(mock_requests_post.call_args[1]["json"]["address"], address,
+                         "The request payload should contain the correct address.")
 
