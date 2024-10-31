@@ -168,7 +168,7 @@ class Blockchain:
         """
 
         # Get transaction count for wallet
-        nonce = self.web3.eth.get_transaction_count(self.ACCOUNT)
+        nonce = self.get_nonce()
 
         # Create the contract deployment transaction
         transaction = self.build_transaction(self.ACCOUNT, nonce=nonce, data=bytecode)
