@@ -87,6 +87,18 @@ class Blockchain:
 
         return transaction
 
+    def check_balance(self, token_contract_address: str, address: str) -> int:
+        """
+        Check the balance of a given token contract for a specific address.
+
+        :param token_contract_address: The address of the ERC-20 token contract.
+        :param address: The address whose token balance is to be checked.
+        :return: Balance of the given address for the specified token contract.
+        """
+        contract = self.web3.eth.contract(address=token_contract_address, abi=self.TOKEN_ABI)
+        balance = contract.functions.balanceOf(address).call()
+        return balance
+
     def get_nonce(self) -> int:
         """
         :return: Transaction count of address
