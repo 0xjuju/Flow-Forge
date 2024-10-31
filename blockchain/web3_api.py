@@ -99,6 +99,27 @@ class Blockchain:
         balance = contract.functions.balanceOf(address).call()
         return balance
 
+    def deploy_contract(self, name: str, symbol: str, decimals: int, initial_supply: int) -> str:
+        """
+        Compile and deploy contract to blockchain
+
+        :param name: Token name
+        :param symbol: Token Symbol
+        :param decimals: Number of decimals for token
+        :param initial_supply: Supply of token
+        :return: Contract address of the deployed token
+        """
+
+        bytecode, abi = self.compile_contract(
+            name=name,
+            symbol=symbol,
+            decimals=decimals,
+            initial_supply=initial_supply
+        )
+
+        contract = self.create_contract(bytecode)
+        return contract
+
     def get_nonce(self) -> int:
         """
         :return: Transaction count of address
