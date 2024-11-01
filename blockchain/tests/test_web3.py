@@ -1,3 +1,4 @@
+from decimal import Decimal
 import json
 from unittest.mock import Mock, patch
 
@@ -16,7 +17,7 @@ class BlockchainTests(TestCase):
         self.blockchain = Blockchain(chain=self.chain, network_type=self.network_type)
         self.source_code = None
 
-        with open("../../resources/test_contract_source_code.json") as f:
+        with open("resources/test_contract_source_code.json") as f:
             self.source_code = json.load(f)
 
         self.bytecode = self.source_code["bytecode"]
@@ -138,3 +139,41 @@ class BlockchainTests(TestCase):
         self.assertEqual(mock_requests_post.call_args[1]["json"]["address"], address,
                          "The request payload should contain the correct address.")
 
+    def test_transfer_tokens(self):
+        """
+        Test transferring a small amount of tokens from the base account to another address.
+        """
+        recipient_address = "0xbA1f6d33bc01A90020fE41a50e52EDD26B018068"
+        transfer_amount = Decimal('50')
+        initial_sender_balance = self.blockchain.check_balance(self.token_contract_address, self.blockchain.ACCOUNT,
+                                                               self.abi)
+        initial_recipient_balance = self.blockchain.check_balance(self.token_contract_address, recipient_address,
+                                                                  self.abi)
+
+        # Perform the token transfer
+        tx_hash = self.blockchain.transfer_tokens(
+            token_contract_address=self.token_contract_address,
+            to_address=recipient_address,
+            amount=transfer_amount,
+            abi=self.abi
+        )
+
+        # Wait for the transaction to be confirmed
+        self.blockchain.wait_for_transaction_receipt(tx_hash, timeout=15)
+
+        # Check final balances
+        final_sender_balance = self.blockchain.check_balance(self.token_contract_address, self.blockchain.ACCOUNT,
+                                                             self.abi)
+        final_recipient_balance = self.blockchain.check_balance(self.token_contract_address, recipient_address,
+                                                                self.abi)
+
+        self.assertEqual(
+            final_sender_balance,
+            initial_sender_balance - transfer_amount,
+            "Sender balance should decrease by the transferred amount."
+        )
+        self.assertEqual(
+            final_recipient_balance,
+            initial_recipient_balance + transfer_amount,
+            "Recipient balance should increase by the transferred amount."
+        )

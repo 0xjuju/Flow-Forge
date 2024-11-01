@@ -270,6 +270,36 @@ class Blockchain:
             print(
                 f"Failed to request {self.network_type} testnet tokens. Status code: {response.status_code}, Response: {response.text}")
 
+    def transfer_tokens(self, token_contract_address: str, to_address: str, amount: Decimal, abi: list) -> str:
+        """
+        Transfer tokens from the connected account to another address.
+
+        :param token_contract_address: The address of the ERC-20 token contract.
+        :param to_address: The recipient address.
+        :param amount: The amount of tokens to transfer.
+        :param abi: The ABI of the token contract.
+        :return: Transaction hash of the transfer.
+        """
+        contract = self.web3.eth.contract(address=token_contract_address, abi=abi)
+        decimals = contract.functions.decimals().call()
+        value = int(amount * (10 ** decimals))
+
+        # Build the transaction
+        tx = {
+            'chainId': self.web3.eth.chain_id,
+            'gasPrice': self.web3.eth.gas_price,
+            'nonce': self.get_nonce(),
+            'from': self.ACCOUNT,
+        }
+        # estimate gas, then add value to transaction
+        tx["gas"] = self.web3.eth.estimate_gas(tx)
+
+        transaction = contract.functions.transfer(to_address, value).build_transaction(tx)
+
+        signed_tx = self.sign_transaction(transaction)
+        tx_hash = self.broadcast_transaction(signed_tx.raw_transaction)
+        return tx_hash.hex()
+
 
 # Example usage
 if __name__ == "__main__":
