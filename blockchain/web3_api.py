@@ -251,7 +251,7 @@ class Blockchain:
 
     def request_testnet_tokens(self, address: str):
         """
-        Request testnet tokens using Alchemy"s faucet API for the specified address.
+        Request testnet tokens using Alchemy's faucet API for the specified address.
 
         :param address: The Ethereum address to receive testnet tokens.
         """
