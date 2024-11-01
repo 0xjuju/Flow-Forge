@@ -1,8 +1,11 @@
+from decimal import Decimal
+
 from web3 import Web3
 from decouple import config
 from eth_account import Account
 from eth_account.datastructures import SignedTransaction
-from solcx import compile_source, install_solc
+from solcx import compile_source, install_solc, compile_solc
+import solcx.exceptions
 import requests
 
 
@@ -72,6 +75,9 @@ class Blockchain:
             "nonce": nonce,
         }
 
+        if kwargs.get("data"):
+            transaction["data"] = kwargs.get("data")
+
         if gas is None:
             gas = self.web3.eth.estimate_gas(transaction)
 
@@ -83,21 +89,28 @@ class Blockchain:
 
         transaction["gas"] = gas
         transaction["gasPrice"] = gas_price
+
         transaction.update(kwargs)
 
         return transaction
 
-    def check_balance(self, token_contract_address: str, address: str) -> int:
+    def check_balance(self, token_contract_address: str, address: str, abi: list) -> Decimal:
         """
         Check the balance of a given token contract for a specific address.
 
         :param token_contract_address: The address of the ERC-20 token contract.
         :param address: The address whose token balance is to be checked.
-        :return: Balance of the given address for the specified token contract.
+        :param abi: The ABI of the token contract.
+        :return: Balance of the given address for the specified token contract, formatted as a human-readable number.
         """
-        contract = self.web3.eth.contract(address=token_contract_address, abi=self.TOKEN_ABI)
+        contract = self.web3.eth.contract(address=token_contract_address, abi=abi)
+
         balance = contract.functions.balanceOf(address).call()
-        return balance
+        decimals = contract.functions.decimals().call()
+
+        # Convert to a human-readable number
+        human_readable_balance = Decimal(balance) / Decimal(10 ** decimals)
+        return human_readable_balance
 
     def deploy_contract(self, name: str, symbol: str, decimals: int, initial_supply: int) -> str:
         """
@@ -175,8 +188,14 @@ class Blockchain:
         :param initial_supply: The initial supply of tokens.
         :return: The compiled bytecode and ABI of the contract.
         """
-        # Install Solidity compiler version
-        install_solc("0.8.20")
+
+        try:
+            # Install Solidity compiler version
+            install_solc("0.8.20")
+        except solcx.exceptions.SolcInstallationError as e:
+            print(e)
+            print("Now attempt to compile solidity compiler from its source code")
+            compile_solc("0.8.20")
 
         # Solidity source code for ERC-20 token
         erc20_source_code = f"""
@@ -204,7 +223,7 @@ class Blockchain:
 
         return bytecode, self.TOKEN_ABI
 
-    def create_contract(self, bytecode: str) -> str:
+    def create_contract(self, bytecode: str, **kwargs) -> str:
         """
         Deploy a new ERC-20 smart contract to the blockchain.
 
@@ -216,7 +235,7 @@ class Blockchain:
         nonce = self.get_nonce()
 
         # Create the contract deployment transaction
-        transaction = self.build_transaction(self.ACCOUNT, nonce=nonce, data=bytecode)
+        transaction = self.build_transaction(self.ACCOUNT, nonce=nonce, data=bytecode, **kwargs)
 
         # Sign and send the transaction
         signed_tx = self.sign_transaction(transaction)

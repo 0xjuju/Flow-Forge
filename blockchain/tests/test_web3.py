@@ -19,6 +19,10 @@ class BlockchainTests(TestCase):
         with open("../../resources/test_contract_source_code.json") as f:
             self.source_code = json.load(f)
 
+        self.bytecode = self.source_code["bytecode"]
+        self.abi = self.source_code["abi"]
+        self.token_contract_address = "0x8484FB94F67AA36c4Ea2F95f33abb83809632dAB"
+
     @patch("blockchain.web3_api.Blockchain._setup_web3")
     def test_connection(self, mock_setup_web3):
         """
