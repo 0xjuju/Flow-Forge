@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="25160863-0547-4601-a120-a21cfb604586" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/blockchain/alchemy_webhooks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blockchain/tasks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blockchain/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blockchain/tests/contract_source_code.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_settings/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/_settings/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_settings/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/_settings/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blockchain/tests/test_web3.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/tests/test_web3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

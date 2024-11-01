@@ -1,6 +1,8 @@
-from django.test import TestCase
+import json
 from unittest.mock import Mock, patch
+
 from blockchain.web3_api import Blockchain
+from django.test import TestCase
 from web3 import exceptions
 
 
@@ -12,6 +14,10 @@ class BlockchainTests(TestCase):
         self.chain = "ethereum"
         self.network_type = "sepolia"
         self.blockchain = Blockchain(chain=self.chain, network_type=self.network_type)
+        self.source_code = None
+
+        with open("../../resources/test_contract_source_code.json") as f:
+            self.source_code = json.load(f)
 
     @patch("blockchain.web3_api.Blockchain._setup_web3")
     def test_connection(self, mock_setup_web3):

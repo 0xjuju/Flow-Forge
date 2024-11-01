@@ -220,7 +220,7 @@ class Blockchain:
 
         # Sign and send the transaction
         signed_tx = self.sign_transaction(transaction)
-        tx_hash = self.broadcast_transaction(signed_tx.rawTransaction)
+        tx_hash = self.broadcast_transaction(signed_tx.raw_transaction)
 
         # Wait for the transaction receipt
         tx_receipt = self.wait_for_transaction_receipt(tx_hash)
