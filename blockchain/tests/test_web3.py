@@ -1,8 +1,8 @@
 from decimal import Decimal
-import json
 from unittest.mock import Mock, patch
 
 from blockchain.web3_api import Blockchain
+from .build_blockchain_data import Build
 import decouple
 from django.test import TestCase
 from web3 import exceptions
@@ -16,13 +16,10 @@ class BlockchainTests(TestCase):
         self.chain = "ethereum"
         self.network_type = "sepolia"
         self.blockchain = Blockchain(chain=self.chain, network_type=self.network_type)
-        self.source_code = None
 
-        with open("resources/test_contract_source_code.json") as f:
-            self.source_code = json.load(f)
+        # Bytecode and ABI of test token contract
+        self.bytecode, self.abi = Build.get_test_source_code()
 
-        self.bytecode = self.source_code["bytecode"]
-        self.abi = self.source_code["abi"]
         self.token_contract_address = decouple.config("TEST_TOKEN_CONTRACT")
 
     @patch("blockchain.web3_api.Blockchain._setup_web3")
