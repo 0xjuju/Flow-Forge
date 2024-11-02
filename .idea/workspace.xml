@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="25160863-0547-4601-a120-a21cfb604586" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/blockchain/tests/build_blockchain_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blockchain/tests/test_simulate_blockchain_webhooks.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/tests/test_simulate_blockchain_webhooks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain/tests/test_web3.py" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/tests/test_web3.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

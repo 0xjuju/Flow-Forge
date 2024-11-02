@@ -1,3 +1,4 @@
+from decimal import Decimal
 
 from blockchain.web3_api import Blockchain
 from .build_blockchain_data import Build
@@ -16,5 +17,5 @@ class BlockchainSimulationTests(TestCase):
 
     def test_simulate_webhook(self):
 
-        self.sepolia.transfer_tokens(self.test_token_contract, self.user_wallet, 100)
+        self.sepolia.transfer_tokens(self.test_token_contract, self.user_wallet, Decimal("100"), self.abi)
 
