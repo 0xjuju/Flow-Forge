@@ -3,6 +3,7 @@ import json
 from unittest.mock import Mock, patch
 
 from blockchain.web3_api import Blockchain
+import decouple
 from django.test import TestCase
 from web3 import exceptions
 
@@ -22,7 +23,7 @@ class BlockchainTests(TestCase):
 
         self.bytecode = self.source_code["bytecode"]
         self.abi = self.source_code["abi"]
-        self.token_contract_address = "0x8484FB94F67AA36c4Ea2F95f33abb83809632dAB"
+        self.token_contract_address = decouple.config("TEST_TOKEN_CONTRACT")
 
     @patch("blockchain.web3_api.Blockchain._setup_web3")
     def test_connection(self, mock_setup_web3):
