@@ -10,6 +10,7 @@ from web3 import exceptions
 
 class BlockchainTests(TestCase):
     def setUp(self):
+
         """
         Set up the test case by initializing the Blockchain instance.
         """

@@ -2,7 +2,7 @@ from celery import shared_task
 
 
 @shared_task
-def process_events():
+def process_events(logs: dict[str, any]):
     pass
 
 
