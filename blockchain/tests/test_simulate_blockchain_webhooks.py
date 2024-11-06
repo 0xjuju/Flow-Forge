@@ -16,7 +16,7 @@ class BlockchainSimulationTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        @task_postrun.connect
+        @task_postrun.connect(dispatch_uid="task_post_run_simulation")
         def task_monitor_handler(sender=None, **kwargs):
             cls.task_results.append(kwargs)
 
